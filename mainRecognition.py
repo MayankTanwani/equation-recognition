@@ -1,3 +1,7 @@
+import os
+# os.system('pip install opencv-python')
+# os.system('apt update && apt-get install libsm6 libxrender1 libfontconfig1')
+
 import cv2
 import numpy as np
 import sys, getopt
