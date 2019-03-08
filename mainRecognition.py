@@ -7,7 +7,7 @@ from keras.models import load_model
 from symbols import *
 from classification import *
 from make_mst import *
-import easygui
+# import easygui
 
 def main(argv):
 	inp_pic = "timages/"
@@ -25,12 +25,12 @@ def main(argv):
 
 	clf = Classifiy()
 	org = cv2.imread(inp_pic)
-	cv2.imshow("Original Image", org)
+	# cv2.imshow("Original Image", org)
 	img = cv2.imread(inp_pic,0)
 
 	img = cv2.medianBlur(img,3)
 	img = cv2.GaussianBlur(img, (5, 5), 0)
-	cv2.imshow("After Blur",img)
+	# cv2.imshow("After Blur",img)
 
 	img = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 5)
 	kernel = np.ones((1,1),np.uint8)
@@ -38,7 +38,7 @@ def main(argv):
 	# Dilation or Thinning of Image
 	img = cv2.dilate(img,kernel, iterations = 4)
 	
-	cv2.imshow("After", img)
+	# cv2.imshow("After", img)
 
 	thresh = img
 	coords = np.column_stack(np.where(thresh > 0))
@@ -61,9 +61,9 @@ def main(argv):
 
 	img = rotated
 
-	cv2.imshow("Deskew",img)
-
-	_,ctrs, hier = cv2.findContours(img.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+	# cv2.imshow("Deskew",img)
+	print(len(cv2.findContours(img.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)))
+	ctrs, hier = cv2.findContours(img.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
 	new_ctrs = []
 
@@ -73,7 +73,7 @@ def main(argv):
 		if length>20:
 			new_ctrs.append(ctrs[i])
 
-	cv2.imshow("Corrected Contours",img)
+	# cv2.imshow("Corrected Contours",img)
 	rects = [cv2.boundingRect(ctr) for ctr in new_ctrs]
 	all_contours = []
 	recognised_symbols = []
@@ -98,14 +98,19 @@ def main(argv):
 		recognised_symbols.append(str(symbol))
 		cv2.putText(imageWithSymbols, str(symbol), (int(rect[0]), int(rect[1])),cv2.FONT_HERSHEY_DUPLEX, 2, (0, 255, 255), 3)
 		print(str(symbol))
-	cv2.imshow("Resulting Image with Predicted numbers", imageWithSymbols)
+	# cv2.imshow("Resulting Image with Predicted numbers", imageWithSymbols)
 	cv2.waitKey()
 
 	result = spanning_tree(org,img,all_contours)
 	final_array = make_eqaution(result,all_contours,recognised_symbols)
 	for i in final_array:
-		final_equation = final_equation + str(i) + " "
-	easygui.msgbox(final_equation, 'Recognised Equation')
+		final_equation = final_equation + str(i)
+	# easygui.msgbox(final_equation, 'Recognised Equation')
+	print(final_equation)
+	try:
+		print(eval(final_equation+))
+	except:
+		print("Some error occured in eval")
 
 if __name__ == "__main__":
 	main(sys.argv[1:])

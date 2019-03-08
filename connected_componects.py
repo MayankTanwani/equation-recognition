@@ -53,12 +53,12 @@ def spanning_tree(org,img,ctrs):
 		cv2.rectangle(org,(int(y)-2,int(x)-2),(int(y+2),int(x+2)),(0,0,255),5)
 	print("\nMST for the image\n")
 	printMST(result)
-	cv2.imshow("Countours",org)
+	# cv2.imshow("Countours",org)
 	for u,v,w in result : 
 		combined_result.append([u,all_contours[u],v,all_contours[v],w])
 		# cv2.imshow("{} -connected with- {} ".format(u,v),all_contours[u][0])	
 		cv2.line(org,(int(all_contours[u][2]),int(all_contours[u][1])),(int(all_contours[v][2]),int(all_contours[v][1])),(255,0,0),2)
-	cv2.imshow("MST",org)
+	# cv2.imshow("MST",org)
 	cv2.waitKey()
 
 if __name__ == "__main__":
