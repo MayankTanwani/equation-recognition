@@ -7,26 +7,29 @@ from keras.models import load_model
 from symbols import *
 from classification import *
 from make_mst import *
+from skimage import io
+import urllib
 # import easygui
 
+from flask import Flask, request, jsonify
+app = Flask(__name__)
+
+tasks ={'equation': " ",'result' : 5}
+
+@app.route('/predict',methods=['GET','POST'])
+def index():
+	return jsonify(main(request.json['url']))
+
+
 def main(argv):
-	inp_pic = "timages/"
-	try:
-		opts, args = getopt.getopt(argv,"hi:o:",["ifile=","ofile="])
-	except getopt.GetoptError:  
-		print ('test.py -i <inputfile>')
-		sys.exit(2)
-	for opt, arg in opts:
-		if opt == '-h':
-			print ('test.py -i <inputfile>')
-			sys.exit()
-		elif opt in ("-i", "--ifile"):
-			inp_pic += arg
+	req = urllib.request.urlopen(argv)
+	arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
+	img = cv2.imdecode(arr, -1)
 
 	clf = Classifiy()
-	org = cv2.imread(inp_pic)
+	org = cv2.imdecode(arr, -1)
 	# cv2.imshow("Original Image", org)
-	img = cv2.imread(inp_pic,0)
+	img = cv2.imdecode(arr,0)
 
 	img = cv2.medianBlur(img,3)
 	img = cv2.GaussianBlur(img, (5, 5), 0)
@@ -107,10 +110,14 @@ def main(argv):
 		final_equation = final_equation + str(i)
 	# easygui.msgbox(final_equation, 'Recognised Equation')
 	print(final_equation)
+	tasks['equation'] = final_equation
 	try:
-		print(eval(final_equation+))
+		print(eval(final_equation))
+		tasks['result'] = eval(final_equation)
 	except:
 		print("Some error occured in eval")
+	return tasks
 
 if __name__ == "__main__":
-	main(sys.argv[1:])
+	app.run(debug=True)
+	
