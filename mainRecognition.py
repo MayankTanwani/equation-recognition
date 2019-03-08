@@ -1,7 +1,6 @@
 import os
-# os.system('pip install opencv-python')
-# os.system('apt update && apt-get install libsm6 libxrender1 libfontconfig1')
-
+#os.system('pip install opencv-python')
+#os.system('apt update && apt-get install libsm6 libxrender1 libfontconfig1')
 import cv2
 import numpy as np
 import sys, getopt
@@ -26,7 +25,7 @@ def index():
 
 
 def main(argv):
-	req = urllib.request.urlopen(argv)
+	req = urllib.urlopen(argv)
 	arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
 	img = cv2.imdecode(arr, -1)
 

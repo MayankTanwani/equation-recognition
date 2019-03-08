@@ -4,7 +4,7 @@ from mst import *
 import numpy as np
 import sys, getopt
 from skimage.feature import hog
-import queue
+import Queue
 
 def spanning_tree(org,img,all_contours):
 	g = Graph(len(all_contours))
@@ -46,7 +46,7 @@ def make_eqaution(mst,all_contours,recognised_symbols):
 	return bfs(all_dict,0,recognised_symbols)
 
 def bfs(result,src,recognised_symbols) :
-	q = queue.Queue()
+	q = Queue.Queue()
 	q.put(src)
 	visited = [False] * len(recognised_symbols)
 	visited[src] = True
