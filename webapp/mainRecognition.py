@@ -1,7 +1,4 @@
 import os
-# os.system('pip install opencv-python')
-# os.system('apt update && apt-get install libsm6 libxrender1 libfontconfig1')
-
 import cv2
 import numpy as np
 import sys, getopt
@@ -15,7 +12,7 @@ from skimage import io
 import urllib
 # import easygui
 
-from flask import Flask, request, jsonify
+from flask import Flask,Response,request, jsonify
 app = Flask(__name__)
 
 tasks ={'equation': " ",'result' : 5}
@@ -23,11 +20,15 @@ tasks ={'equation': " ",'result' : 5}
 @app.route('/predict',methods=['GET','POST'])
 def index():
 	return jsonify(main(request.json['url']))
+@app.route('/',methods=['GET','POST'])
+def testHello():
+	return 'Hello World'
 
 
 def main(argv):
 	req = urllib.request.urlopen(argv)
 	arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
+
 	img = cv2.imdecode(arr, -1)
 
 	clf = Classifiy()
@@ -70,7 +71,7 @@ def main(argv):
 
 	# cv2.imshow("Deskew",img)
 	print(len(cv2.findContours(img.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)))
-	ctrs, hier = cv2.findContours(img.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+	_,ctrs, hier = cv2.findContours(img.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
 	new_ctrs = []
 
@@ -106,8 +107,6 @@ def main(argv):
 		cv2.putText(imageWithSymbols, str(symbol), (int(rect[0]), int(rect[1])),cv2.FONT_HERSHEY_DUPLEX, 2, (0, 255, 255), 3)
 		print(str(symbol))
 	# cv2.imshow("Resulting Image with Predicted numbers", imageWithSymbols)
-	cv2.waitKey()
-
 	result = spanning_tree(org,img,all_contours)
 	final_array = make_eqaution(result,all_contours,recognised_symbols)
 	for i in final_array:
@@ -123,5 +122,5 @@ def main(argv):
 	return tasks
 
 if __name__ == "__main__":
-	app.run(debug=True)
+	app.run(debug=True,host='0.0.0.0')
 	
