@@ -59,7 +59,7 @@ def spanning_tree(org,img,ctrs):
 		# cv2.imshow("{} -connected with- {} ".format(u,v),all_contours[u][0])	
 		cv2.line(org,(int(all_contours[u][2]),int(all_contours[u][1])),(int(all_contours[v][2]),int(all_contours[v][1])),(255,0,0),2)
 	# cv2.imshow("MST",org)
-	cv2.waitKey()
+	# cv2.waitKey()
 
 if __name__ == "__main__":
    main(sys.argv[1:])
