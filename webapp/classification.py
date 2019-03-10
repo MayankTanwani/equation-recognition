@@ -10,8 +10,9 @@ import gist
 import pickle
 
 class Classifiy:
+	model = load_model('hog-crohme-digits-20e-5-features.h5')
 	def __init__(self):
-		self.model = load_model('hog-crohme-digits-20e-5-features.h5')
+		self.randomm = "hh"
 
 	def recognise_symbol(self,roi):
 		fd,hog_image = hog(roi,pixels_per_cell = (5,5),visualize=True)

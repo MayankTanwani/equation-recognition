@@ -11,7 +11,8 @@ from make_mst import *
 from skimage import io
 import urllib
 # import easygui
-
+clf = Classifiy()
+clf.model._make_predict_function()
 from flask import Flask,Response,request, jsonify
 app = Flask(__name__)
 
@@ -31,7 +32,6 @@ def main(argv):
 
 	img = cv2.imdecode(arr, -1)
 
-	clf = Classifiy()
 	org = cv2.imdecode(arr, -1)
 	# cv2.imshow("Original Image", org)
 	img = cv2.imdecode(arr,0)
