@@ -20,7 +20,13 @@ tasks ={'equation': " ",'result' : 5}
 
 @app.route('/predict',methods=['GET','POST'])
 def index():
-	return jsonify(main(request.json['url']))
+	print(request.json['url'])
+	try: 
+		solution = jsonify(main(request.json['url']))
+	except:
+		task['equation'] = "null"
+		return jsonify(task)
+	return solution
 @app.route('/',methods=['GET','POST'])
 def testHello():
 	return 'Hello World'
